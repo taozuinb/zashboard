@@ -97,6 +97,46 @@ const ru: LANG_MESSAGE = {
   speedtestModeCore: 'Управление ядром',
   speedtestModeTip:
     'Управление панелью оставляет группы Selector, LoadBalance и Smart на тестировании отдельных узлов из панели и показывает прогресс по узлам. Управление ядром вызывает API группового теста ядра, чтобы ядро проверило всю группу сразу.',
+  downloadSpeedtest: 'Тест скорости загрузки',
+  downloadSpeedtestTip:
+    'Измеряет скорость загрузки каждого узла группы, скачивая тестовый файл, и выбирает самый быстрый узел. Трафик браузера должен проходить через ядро (например, прокси системы/браузера на mixed-port ядра); при прямом открытии панели по локальной сети скорость узлов измерить нельзя.',
+  downloadSpeedtestUrl: 'URL теста загрузки',
+  downloadSpeedtestTimeout: 'Таймаут теста загрузки',
+  downloadSpeedtestAutoSelect: 'Выбирать самый быстрый узел после теста',
+  downloadSpeedtestSkipRouteCheck: 'Пропускать проверку маршрута',
+  downloadSpeedtestSkipRouteCheckTip:
+    'По умолчанию тест проверяет по соединениям ядра, что трафик действительно идёт через тестируемый узел, иначе прерывается. Включайте, только если трафик панели идёт через прокси, а проверка всё равно не проходит.',
+  downloadSpeedtestRunningTip: '{name}\nТест загрузки: {node} ({done}/{total})',
+  downloadSpeedtestFinishedTip: '{name}\nСамый быстрый узел: {node} · {speed}',
+  downloadSpeedtestFailedTip: '{name}\nТест скорости загрузки не удался',
+  downloadSpeedtestCanceledTip: '{name}\nТест скорости загрузки отменён',
+  downloadSpeedtestRouteUnverifiedTip:
+    '{name}\nНе удалось подтвердить, что трафик теста идёт через эту группу, тест загрузки прерван. Если панель открыта напрямую по локальной сети, запросы браузера не проходят через ядро: укажите прокси браузера/системы на mixed-port ядра (allow-lan: true) и проверьте, что URL теста маршрутизируется через эту группу. Либо включите «Пропускать проверку маршрута», если уверены в окружении.',
+  downloadSpeedtestResultTip: '{speed} · {time}',
+  downloadSpeedtestServerUrl: 'URL сервиса тестирования скорости',
+  downloadSpeedtestServerUrlTip:
+    'Необязательно. Если задан, тесты скорости группы выполняет сервис node_speed_test (он скачивает через mixed-port ядра на сервере), поэтому они работают и при прямом открытии панели по локальной сети. Пусто — используется тест в браузере. Поддерживается полный URL или путь на том же origin, например /node-speed.',
+  downloadSpeedtestServerProxy: 'Mixed-прокси на стороне сервера',
+  downloadSpeedtestServerProxyTip:
+    'Адрес HTTP/mixed-прокси ядра с точки зрения сервиса тестирования, например http://127.0.0.1:7890.',
+  downloadSpeedtestServerDuration: 'Длительность замера на узел',
+  downloadSpeedtestServerMaxMB: 'Лимит байт на узел',
+  downloadSpeedtestServerConfirmTitle: 'Запустить тест скорости на сервере?',
+  downloadSpeedtestServerConfirmMessage:
+    'Сервис временно переключит узлы группы "{group}" и скачает данные через ядро для замера пропускной способности. Убедитесь, что URL теста маршрутизируется в эту группу. После теста исходный выбор восстанавливается, если не включён автовыбор.',
+  downloadSpeedtestServerConfirmStart: 'Запустить тест',
+  downloadSpeedtestServerModeTip:
+    'Настроен серверный тест скорости; эта кнопка запускает его через сервис.',
+  downloadSpeedtestServerForbiddenTip:
+    'Сервис тестирования отклонил межсайтовый запрос с этой страницы. Запустите сервис с --allowed-origin <origin этой страницы>, например --allowed-origin http://192.168.1.10:8080.',
+  downloadSpeedtestServerUnavailableTip:
+    'Не удаётся подключиться к сервису тестирования. Проверьте адрес, что сервис запущен и что эта страница разрешена через --allowed-origin.',
+  downloadSpeedtestServerBusyTip:
+    'В сервисе тестирования уже выполняется задача. Остановите её на странице сервиса или дождитесь завершения.',
+  downloadSpeedtestServerGroupUnavailableTip:
+    'Сервис тестирования не может проверить эту группу: {reason}',
+  downloadSpeedtestServerFailedTip: '{name}\nСерверный тест скорости не удался: {message}',
+
   connectionStyle: 'Стиль подключения',
   logStyle: 'Стиль логов',
   ruleStyle: 'Стиль правил',
@@ -167,6 +207,8 @@ const ru: LANG_MESSAGE = {
   namedesc: 'Имя по убыванию',
   latencydesc: 'Задержка по убыванию',
   latencyasc: 'Задержка по возрастанию',
+  speeddesc: 'Скорость загрузки по убыванию',
+  speedasc: 'Скорость загрузки по возрастанию',
 
   language: 'Язык',
   automaticDisconnection: 'Автоматическое отключение',
@@ -522,6 +564,7 @@ const ru: LANG_MESSAGE = {
   settingsSectionDiagnostics: 'Диагностика',
   settingsSectionProxyDisplay: 'Группы и отображение',
   settingsSectionProxyAdvanced: 'Иконки и расширенные настройки',
+  settingsSectionDownloadSpeedtest: 'Тест скорости загрузки',
   settingsSectionConnectionDisplay: 'Отображение',
   settingsSectionClientIdentity: 'Идентификация и метки клиентов',
   ports: 'Порты',

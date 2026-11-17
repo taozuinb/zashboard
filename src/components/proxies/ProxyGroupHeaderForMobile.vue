@@ -45,6 +45,13 @@
         :group-name="proxyGroup.name"
         @click.stop="emit('latency-test')"
       />
+      <DownloadSpeedTag
+        v-if="isDownloadSpeedTestableGroup(name)"
+        :class="twMerge('bg-base-200/40 hover:bg-base-200/70 z-10')"
+        :name="proxyGroup.now"
+        :group-name="proxyGroup.name"
+        @click.stop="emit('speed-test')"
+      />
     </div>
     <ProxyIcon
       v-if="proxyGroup?.icon"
@@ -62,7 +69,7 @@ import { useKeyboardShortcuts } from '@/composables/use-keyboard'
 import { KEYBOARD_SHORTCUT_ACTION } from '@/helper/keyboard'
 import { getDownloadSpeedByProxyGroup } from '@/helper/proxy-group-traffic'
 import { isHiddenGroup } from '@/helper'
-import { proxyMap } from '@/assembly/proxies'
+import { isDownloadSpeedTestableGroup, proxyMap } from '@/assembly/proxies'
 import { useTooltip } from '@/composables/use-tooltip'
 import { prettyBytesHelper } from '@/helper/utils'
 import { manageHiddenGroup, twoColumnProxyGroup } from '@/store/settings'
@@ -70,6 +77,7 @@ import { twMerge } from 'tailwind-merge'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import VisibilityToggle from '../common/VisibilityToggle.vue'
+import DownloadSpeedTag from './DownloadSpeedTag.vue'
 import LatencyTag from './LatencyTag.vue'
 import ProxyGroupFilter from './ProxyGroupFilter.vue'
 import ProxyGroupNow from './ProxyGroupNow.vue'
@@ -84,6 +92,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'latency-test': []
+  'speed-test': []
 }>()
 
 const { t } = useI18n()

@@ -65,6 +65,47 @@ pnpm test:verify --groups 100 --nodes 50 --conns 1000   # 换个负载再跑一�
 
 全过打印 `14/14 项通过`,有失败则退出码非 0。
 
+## 下载测速:`pnpm test:speed`
+
+构建后运行,检查代理页的「下载测速并自动选最快」:
+
+```bash
+pnpm build
+pnpm test:speed
+```
+
+测速是纯前端做的:临时逐个切换组内节点、浏览器真的去下载测速文件量吞吐、结果缓存,最后选中
+最快的那个。脚本用 2 个组 × 3 个节点的现场,让 mock 的 `/__speedtest` 按「被测组当前选中的
+节点」给不同的分块延迟(Node-001 最快),于是实测吞吐天然有快慢。覆盖:
+
+- 点组头的下载测速入口后,组的 `now` 真的变成最快节点(轮询假后端的 `/proxies`);
+- 节点卡上出现缓存的速度文本(含 `/s`);
+- 把 `config/proxy-sort-type` 设成 `speeddesc` 并刷新后,组内最快节点排在最前;
+- 关掉合成连接后重测(路由校验必然失败):弹出错误 toast,且当前选择不被改掉。
+
+`/connections` 里那条「合成连接」和 `/__speedtest` 的分块延迟都由 mock 的
+`POST /__mock/control` 打开,默认关闭,所以不影响其它脚本。
+
+## 服务端测速:`pnpm test:speed:server`
+
+构建后运行,检查「服务端测速」模式(把测速交给外部 node_speed_test 服务):
+
+```bash
+pnpm build
+pnpm test:speed:server
+```
+
+mock 里有一份 `/node-speed/*` 假服务(connection / tasks / state / stop),任务每 250ms 测完
+一个节点,Node-001 最快(12MB/s),auto_select 完成时像真服务那样改掉组当前的选择。覆盖:
+
+- 点组头测速入口 → 弹出确认弹窗 → 点开始;
+- 节点卡出现服务端测出来的速度(含 `MB/s`);
+- 任务完成后组当前节点变成 Node-001,并弹成功 toast;
+- 把 `config/proxy-sort-type` 设成 `speeddesc` 并刷新后,组内最快节点排在最前;
+- 假服务整体返回 403(跨来源被拒)时:弹错误 toast,且当前选择不被改掉。
+
+假服务的跨来源拒绝由 `POST /__mock/control` 的 `serverSpeedtestForbidden` 打开,默认关闭。
+
 ## 折叠动画时序：`node test/collapse.mjs`
 
 构建后运行，检查单组展开 / 收起、同列错峰展开和同时收起、快速取消及交接中反向切换。
@@ -130,17 +171,21 @@ node test/mock-server.mjs --groups 150 --nodes 60 --conns 300 --port 9999
 它实现了面板会用到的那部分 Clash API:`/version` `/configs` `/proxies` `/providers/proxies`
 `/rules`,测速端点,以及 `/connections` `/traffic` `/memory` 三个 WebSocket。
 另外有个 `/__mock/control`,`verify.mjs` 用它在运行时改测速端点的行为(固定延迟值、故意变慢),
-好采到「乐观写入」的中间态。
+好采到「乐观写入」的中间态;`download-speed.mjs` 用它打开 `/__speedtest` 的按节点分块延迟与
+`/connections` 里的合成连接(默认都关,不影响手动点)。还有一份 `/node-speed/*` 假服务,
+模拟外部 node_speed_test(connection / tasks / state / stop),供 `server-speedtest.mjs` 用。
 
 ## 目录
 
 ```
 test/
-  bench.mjs          基准
-  verify.mjs         行为冒烟
-  collapse.mjs       折叠动画时序回归
-  setup.mjs          设置页登录与自动连接回归
-  mock-server.mjs    假的 mihomo 后端(也可单独跑)
+  bench.mjs            基准
+  verify.mjs           行为冒烟
+  download-speed.mjs   前端下载测速与按速度选取
+  server-speedtest.mjs 服务端测速(外部 node_speed_test 服务)接入
+  collapse.mjs         折叠动画时序回归
+  setup.mjs            设置页登录与自动连接回归
+  mock-server.mjs      假的 mihomo 后端(也可单独跑,内含 /node-speed 假服务)
   lib/
     harness.mjs      假后端 + 静态服务 + Chrome + 打开代理页,串成一件事
     cdp.mjs          够用就好的 CDP 客户端

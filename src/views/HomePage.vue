@@ -78,12 +78,14 @@
         </template>
       </div>
     </RouterView>
+    <DownloadSpeedTestConfirmDialog />
   </div>
 </template>
 
 <script setup lang="ts">
 import { isBackendAvailable } from '@/assembly/probe'
 import { startBackendSession } from '@/assembly/session'
+import DownloadSpeedTestConfirmDialog from '@/components/proxies/DownloadSpeedTestConfirmDialog.vue'
 import SideBar from '@/components/sidebar/SideBar.vue'
 import { dockTop } from '@/helper/padding-views'
 import { checkUIUpdate } from '@/assembly/version'

@@ -102,6 +102,118 @@
         <GroupTestUrlsSettings />
       </div>
     </template>
+    <template v-if="hasVisibleDownloadSpeedtestItems">
+      <div class="settings-section-label">
+        {{ $t('settingsSectionDownloadSpeedtest') }}
+      </div>
+      <div class="settings-grid">
+        <SettingItem
+          :setting-key="k.downloadSpeedtestUrl"
+          class="max-sm:flex-col max-sm:items-start! max-sm:py-3"
+        >
+          <div class="setting-item-label">
+            {{ $t('downloadSpeedtestUrl') }}
+          </div>
+          <TextInput
+            class="w-full flex-2"
+            v-model="downloadSpeedtestUrl"
+            :clearable="true"
+          />
+        </SettingItem>
+        <SettingItem :setting-key="k.downloadSpeedtestTimeout">
+          <div class="setting-item-label">
+            {{ $t('downloadSpeedtestTimeout') }}
+          </div>
+          <input
+            type="number"
+            class="input input-sm w-20"
+            v-model="downloadSpeedtestTimeout"
+          />
+          ms
+        </SettingItem>
+        <SettingItem :setting-key="k.downloadSpeedtestAutoSelect">
+          <div class="setting-item-label">
+            {{ $t('downloadSpeedtestAutoSelect') }}
+          </div>
+          <input
+            class="toggle"
+            type="checkbox"
+            v-model="downloadSpeedtestAutoSelect"
+          />
+        </SettingItem>
+        <SettingItem :setting-key="k.downloadSpeedtestSkipRouteCheck">
+          <div class="setting-item-label">
+            {{ $t('downloadSpeedtestSkipRouteCheck') }}
+            <QuestionMarkCircleIcon
+              class="h-4 w-4"
+              @mouseenter="downloadSpeedtestSkipRouteCheckTip"
+            />
+          </div>
+          <input
+            class="toggle"
+            type="checkbox"
+            v-model="downloadSpeedtestSkipRouteCheck"
+          />
+        </SettingItem>
+        <SettingItem
+          :setting-key="k.downloadSpeedtestServerUrl"
+          class="max-sm:flex-col max-sm:items-start! max-sm:py-3"
+        >
+          <div class="setting-item-label">
+            {{ $t('downloadSpeedtestServerUrl') }}
+            <QuestionMarkCircleIcon
+              class="h-4 w-4"
+              @mouseenter="downloadSpeedtestServerUrlTip"
+            />
+          </div>
+          <TextInput
+            class="w-full flex-2"
+            v-model="downloadSpeedtestServerUrl"
+            :clearable="true"
+            placeholder="http://192.168.50.69:8000"
+          />
+        </SettingItem>
+        <SettingItem
+          :setting-key="k.downloadSpeedtestServerProxy"
+          class="max-sm:flex-col max-sm:items-start! max-sm:py-3"
+        >
+          <div class="setting-item-label">
+            {{ $t('downloadSpeedtestServerProxy') }}
+            <QuestionMarkCircleIcon
+              class="h-4 w-4"
+              @mouseenter="downloadSpeedtestServerProxyTip"
+            />
+          </div>
+          <TextInput
+            class="w-full flex-2"
+            v-model="downloadSpeedtestServerProxy"
+            :clearable="true"
+          />
+        </SettingItem>
+        <SettingItem :setting-key="k.downloadSpeedtestServerDuration">
+          <div class="setting-item-label">
+            {{ $t('downloadSpeedtestServerDuration') }}
+          </div>
+          <input
+            type="number"
+            class="input input-sm w-20"
+            v-model="downloadSpeedtestServerDuration"
+          />
+          s
+        </SettingItem>
+        <SettingItem :setting-key="k.downloadSpeedtestServerMaxMB">
+          <div class="setting-item-label">
+            {{ $t('downloadSpeedtestServerMaxMB') }}
+          </div>
+          <input
+            type="number"
+            class="input input-sm w-20"
+            v-model="downloadSpeedtestServerMaxMB"
+          />
+          MB
+        </SettingItem>
+      </div>
+    </template>
     <template v-if="hasVisibleProxyStyleItems">
       <div class="settings-section-label">
         {{ $t('settingsSectionProxyDisplay') }}
@@ -221,6 +333,14 @@ import { useTooltip } from '@/composables/use-tooltip'
 import { getMinCardWidth } from '@/helper/utils'
 import {
   displayGlobalByMode,
+  downloadSpeedtestAutoSelect,
+  downloadSpeedtestServerDuration,
+  downloadSpeedtestServerMaxMB,
+  downloadSpeedtestServerProxy,
+  downloadSpeedtestServerUrl,
+  downloadSpeedtestSkipRouteCheck,
+  downloadSpeedtestTimeout,
+  downloadSpeedtestUrl,
   independentLatencyTest,
   IPv6test,
   lowLatency,
@@ -271,10 +391,32 @@ const speedtestModeTip = (e: Event) => {
 const independentLatencyTestTip = (e: Event) => {
   return showTip(e, t('independentLatencyTestTip'))
 }
+const downloadSpeedtestSkipRouteCheckTip = (e: Event) => {
+  return showTip(e, t('downloadSpeedtestSkipRouteCheckTip'))
+}
+const downloadSpeedtestServerUrlTip = (e: Event) => {
+  return showTip(e, t('downloadSpeedtestServerUrlTip'))
+}
+const downloadSpeedtestServerProxyTip = (e: Event) => {
+  return showTip(e, t('downloadSpeedtestServerProxyTip'))
+}
 
 const handlerProxyCardSizeChange = () => {
   minProxyCardWidth.value = getMinCardWidth(proxyCardSize.value)
 }
+
+const isVisibleDownloadSpeedtestUrl = useIsSettingVisible(k.downloadSpeedtestUrl)
+const isVisibleDownloadSpeedtestTimeout = useIsSettingVisible(k.downloadSpeedtestTimeout)
+const isVisibleDownloadSpeedtestAutoSelect = useIsSettingVisible(k.downloadSpeedtestAutoSelect)
+const isVisibleDownloadSpeedtestSkipRouteCheck = useIsSettingVisible(
+  k.downloadSpeedtestSkipRouteCheck,
+)
+const isVisibleDownloadSpeedtestServerUrl = useIsSettingVisible(k.downloadSpeedtestServerUrl)
+const isVisibleDownloadSpeedtestServerProxy = useIsSettingVisible(k.downloadSpeedtestServerProxy)
+const isVisibleDownloadSpeedtestServerDuration = useIsSettingVisible(
+  k.downloadSpeedtestServerDuration,
+)
+const isVisibleDownloadSpeedtestServerMaxMB = useIsSettingVisible(k.downloadSpeedtestServerMaxMB)
 
 const hasVisibleLatencyItems = computed(() => {
   return (
@@ -286,6 +428,19 @@ const hasVisibleLatencyItems = computed(() => {
     isVisibleIpv6Test.value ||
     isVisibleIndependentLatencyTest.value ||
     (independentLatencyTest.value && isVisibleGroupTestUrls.value)
+  )
+})
+
+const hasVisibleDownloadSpeedtestItems = computed(() => {
+  return (
+    isVisibleDownloadSpeedtestUrl.value ||
+    isVisibleDownloadSpeedtestTimeout.value ||
+    isVisibleDownloadSpeedtestAutoSelect.value ||
+    isVisibleDownloadSpeedtestSkipRouteCheck.value ||
+    isVisibleDownloadSpeedtestServerUrl.value ||
+    isVisibleDownloadSpeedtestServerProxy.value ||
+    isVisibleDownloadSpeedtestServerDuration.value ||
+    isVisibleDownloadSpeedtestServerMaxMB.value
   )
 })
 

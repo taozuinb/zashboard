@@ -1,4 +1,9 @@
-import { latencyMapOf, smartOrderMap, type LatencyMap } from '@/assembly/proxies'
+import {
+  getDownloadSpeedByName,
+  latencyMapOf,
+  smartOrderMap,
+  type LatencyMap,
+} from '@/assembly/proxies'
 import { NOT_CONNECTED, PROXY_SORT_TYPE } from '@/constant'
 import { isProxyGroup } from '@/helper'
 import {
@@ -98,6 +103,9 @@ const getSortFunc = (sortType: PROXY_SORT_TYPE, latencyMap: LatencyMap) => {
 
     return latency === NOT_CONNECTED ? Infinity : latency
   }
+  // 没测过的节点没有速度可比,升序时当作无穷大排最后
+  const speedAscFor = (name: string) => getDownloadSpeedByName(name) || Infinity
+
   switch (sortType) {
     case PROXY_SORT_TYPE.NAME_ASC:
       return (a: string, b: string) => a.localeCompare(b)
@@ -107,6 +115,10 @@ const getSortFunc = (sortType: PROXY_SORT_TYPE, latencyMap: LatencyMap) => {
       return (a: string, b: string) => latencyFor(a) - latencyFor(b)
     case PROXY_SORT_TYPE.LATENCY_DESC:
       return (a: string, b: string) => latencyFor(b) - latencyFor(a)
+    case PROXY_SORT_TYPE.SPEED_ASC:
+      return (a: string, b: string) => speedAscFor(a) - speedAscFor(b)
+    case PROXY_SORT_TYPE.SPEED_DESC:
+      return (a: string, b: string) => getDownloadSpeedByName(b) - getDownloadSpeedByName(a)
     default:
       return undefined
   }

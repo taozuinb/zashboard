@@ -39,6 +39,8 @@ export type Cap =
   | 'silentLogLevel'
   | 'runtimeStats'
   | 'latencyTest'
+  | 'downloadSpeedTest'
+  | 'speedTestServer'
   | 'proxyProviderUpdate'
   | 'proxyProviderHealthCheck'
   | 'ruleProviders'
@@ -91,6 +93,8 @@ const clashCaps = computed<Caps>(() => {
     runtimeStats: honk,
 
     latencyTest: true,
+    downloadSpeedTest: true,
+    speedTestServer: true,
     proxyProviderUpdate: true,
     proxyProviderHealthCheck: true,
     ruleProviders: true,
@@ -116,6 +120,8 @@ const daeCaps = computed<Caps>(() => {
     runtimeStats: resources?.runtime_outbounds?.available === true,
 
     latencyTest: resources?.probes?.available === true,
+    downloadSpeedTest: true,
+    speedTestServer: false,
     proxyProviderUpdate: resources?.providers?.can_refresh === true,
     flushDNSCache: resources?.dns_cache?.flush === true,
     dnsQuery: resources?.dns_query?.available === true,

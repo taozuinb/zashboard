@@ -13,6 +13,8 @@ export const IS_APPLE_DEVICE = /Mac|iPod|iPhone|iPad/.test(navigator.platform)
 export const GLOBAL = 'GLOBAL'
 export const TEST_URL = 'https://www.gstatic.com/generate_204'
 export const IPV6_TEST_URL = 'https://ipv6.google.com/generate_204'
+export const DOWNLOAD_SPEEDTEST_URL = 'https://speed.cloudflare.com/__down?bytes=25000000'
+export const DOWNLOAD_SPEEDTEST_SERVER_PROXY_URL = 'http://127.0.0.1:7890'
 export const NOT_CONNECTED = 0
 export enum LANG {
   EN_US = 'en-US',
@@ -94,6 +96,8 @@ export enum PROXY_SORT_TYPE {
   NAME_DESC = 'namedesc',
   LATENCY_ASC = 'latencyasc',
   LATENCY_DESC = 'latencydesc',
+  SPEED_ASC = 'speedasc',
+  SPEED_DESC = 'speeddesc',
 }
 
 export enum PROXY_PREVIEW_TYPE {

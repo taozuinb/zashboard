@@ -22,6 +22,8 @@
     "test:mock": "node test/mock-server.mjs",
     "test:rules": "node test/rule-draft.mjs",
     "test:setup": "node test/setup.mjs",
+    "test:speed": "node test/download-speed.mjs",
+    "test:speed:server": "node test/server-speedtest.mjs",
     "test:verify": "node test/verify.mjs",
     "type-check": "vue-tsc --build --force"
   },

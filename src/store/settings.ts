@@ -5,6 +5,8 @@ import {
   CONNECTION_DISPLAY_STYLE,
   CONNECTIONS_TABLE_ACCESSOR_KEY,
   DETAILED_CARD_STYLE,
+  DOWNLOAD_SPEEDTEST_SERVER_PROXY_URL,
+  DOWNLOAD_SPEEDTEST_URL,
   EMOJIS,
   FOLDER_MODE,
   FONTS,
@@ -320,6 +322,38 @@ export const speedtestTimeout = useStorage<number>('config/speedtest-timeout', 5
 export const speedtestMode = useStorage<SPEEDTEST_MODE>(
   'config/speedtest-mode',
   SPEEDTEST_MODE.DASHBOARD,
+)
+export const downloadSpeedtestUrl = useStorage<string>(
+  'config/download-speedtest-url',
+  DOWNLOAD_SPEEDTEST_URL,
+)
+export const downloadSpeedtestTimeout = useStorage<number>(
+  'config/download-speedtest-timeout',
+  20000,
+)
+export const downloadSpeedtestAutoSelect = useStorage<boolean>(
+  'config/download-speedtest-auto-select',
+  true,
+)
+export const downloadSpeedtestSkipRouteCheck = useStorage<boolean>(
+  'config/download-speedtest-skip-route-check',
+  false,
+)
+export const downloadSpeedtestServerUrl = useStorage<string>(
+  'config/download-speedtest-server-url',
+  '',
+)
+export const downloadSpeedtestServerProxy = useStorage<string>(
+  'config/download-speedtest-server-proxy',
+  DOWNLOAD_SPEEDTEST_SERVER_PROXY_URL,
+)
+export const downloadSpeedtestServerDuration = useStorage<number>(
+  'config/download-speedtest-server-duration',
+  3,
+)
+export const downloadSpeedtestServerMaxMB = useStorage<number>(
+  'config/download-speedtest-server-max-mb',
+  20,
 )
 export const proxySearchMode = useStorage<PROXY_SEARCH_MODE>(
   'config/proxy-search-mode',

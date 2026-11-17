@@ -63,6 +63,8 @@ docker run -d -p 80:80 ghcr.io/zephyruso/zashboard:latest
 3. The proxy group sorting is based on the node order in the GLOBAL group, which follows the configuration file order. If you need custom ordering, you can specify the order by overriding the GLOBAL group.
 4. The dashboard supports PWA (Progressive Web App), which can provide a native app-like experience on mobile devices through "Add to Home Screen".
 5. The dashboard's upgrade button and auto-upgrade functionality require proper configuration of the core's UI download path ([mihomo](https://wiki.metacubex.one/config/general/#_9)), otherwise clicking update may result in updating to the core's default panel.
+6. Clicking the download-speed tag on the right of a proxy group header measures the real download speed of every node in that group and selects the fastest one. The browser traffic must go through the core, otherwise the test aborts with a hint; the test URL, timeout and auto-select behavior are configurable in Settings → Proxies.
+7. If this dashboard is opened directly over LAN (browser traffic does not go through the core), the in-browser download test cannot measure node throughput. Run the optional node_speed_test service on the core host (see its own README), start it with `--allowed-origin <this page origin>`, then configure "Speed test service URL" in Settings → Proxies: group speed tests will be executed by that service through the core mixed-port. If the dashboard is opened directly over LAN, point the client's system/browser proxy to the core mixed-port (`allow-lan: true`) so the browser requests really traverse the tested node; otherwise node speed cannot be measured.
 
 ## 提示
 
@@ -71,6 +73,8 @@ docker run -d -p 80:80 ghcr.io/zephyruso/zashboard:latest
 3. 面板的节点组排序是根据GLOBAL组中的节点顺序排序的，即按配置文件的顺序，如果你需要自定义顺序，可通过覆盖GLOBAL组指定顺序
 4. 面板支持PWA（Progressive Web App），可以在移动设备上通过"添加到主屏幕"获得类原生app的体验
 5. 面板的更新按钮和自动更新功能需要正确的配置核心的ui下载路径 ([mihomo](https://wiki.metacubex.one/config/general/#_9)), 否则可能会在点击更新后更新为核心默认面板
+6. 点击代理组头部的下载测速标签，会逐个测出该组内节点的真实下载速度并自动选中最快节点。测速依赖浏览器流量经过内核代理，不满足时会中止并提示；测速地址、超时和是否自动选中可在“设置 → 代理”里调整。如果面板是局域网直连访问，需要先把客户端系统/浏览器代理指向内核的 mixed-port（内核需开启 `allow-lan: true`），让浏览器请求真的经过被测节点，否则无法测出节点速度。
+7. 局域网直连访问面板、浏览器流量不经过内核时，可以在内核所在机器上运行可选的 node_speed_test 测速服务（启动参数加 `--allowed-origin <本面板地址>`），然后在“设置 → 代理”里填写“测速服务地址”：分组测速改由该服务通过内核 mixed-port 在服务端执行。注意面板若为 https，需为服务配置同源 https 反向代理，否则浏览器会拦截 http 请求。
 
 ## URL params format
 

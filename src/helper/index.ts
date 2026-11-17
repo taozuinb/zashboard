@@ -80,6 +80,19 @@ export const getChainsStringFromConnection = (connection: Connection) => {
   return chains.join('')
 }
 
+// 下载速度没有用户可调的阈值,按量级给个粗略的视觉分级就够了
+export const getColorForSpeed = (bps: number) => {
+  if (bps <= 0) {
+    return ''
+  } else if (bps >= 5_000_000) {
+    return 'text-low-latency'
+  } else if (bps >= 1_000_000) {
+    return 'text-medium-latency'
+  } else {
+    return 'text-high-latency'
+  }
+}
+
 export const getColorForLatency = (latency: number) => {
   if (latency === NOT_CONNECTED) {
     return ''

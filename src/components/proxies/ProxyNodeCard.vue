@@ -1,6 +1,7 @@
 <template>
   <div
     :class="cardClass"
+    :data-node-name="node.name"
     @contextmenu.stop.prevent="handlerLatencyTest"
   >
     <div
@@ -24,20 +25,28 @@
       >
     </div>
 
-    <div class="flex h-4 w-full items-center justify-between">
+    <div class="flex h-4 w-full items-center justify-between gap-1">
       <span
         :class="`truncate text-xs tracking-tight ${active ? 'text-primary-content' : 'text-base-content/60'}`"
         @mouseenter="checkTruncation"
       >
         {{ typeDescription }}
       </span>
-      <LatencyTag
-        :class="[isSmallCard && 'h-4! w-8! rounded-md!', 'shrink-0']"
-        :name="node.name"
-        :loading="isLatencyTesting"
-        :group-name="groupName"
-        @click.stop="handlerLatencyTest"
-      />
+      <div class="flex shrink-0 items-center gap-1">
+        <span
+          v-if="downloadSpeedInfo"
+          class="text-base-content/60 truncate text-xs tabular-nums"
+        >
+          {{ prettyBytesHelper(downloadSpeedInfo) }}/s
+        </span>
+        <LatencyTag
+          :class="[isSmallCard && 'h-4! w-8! rounded-md!', 'shrink-0']"
+          :name="node.name"
+          :loading="isLatencyTesting"
+          :group-name="groupName"
+          @click.stop="handlerLatencyTest"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -46,13 +55,14 @@
 import { smartWeightsMap } from '@/assembly/proxies'
 import { PROXY_CARD_SIZE, PROXY_SORT_TYPE } from '@/constant'
 import { checkTruncation } from '@/helper/tooltip'
+import { prettyBytesHelper } from '@/helper/utils'
 import {
   highlightProxyNode,
   highlightedProxyNode,
   scrollNodeIntoViewKey,
 } from '@/helper/proxies-scroll'
 import { proxyLatencyTest } from '@/assembly/proxies'
-import { getIPv6ByName, getTestUrl, proxyMap } from '@/assembly/proxies'
+import { getDownloadSpeedByName, getIPv6ByName, getTestUrl, proxyMap } from '@/assembly/proxies'
 import { IPv6test, proxyCardSize, proxySortType, truncateProxyName } from '@/store/settings'
 import { computed, inject, nextTick, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -67,6 +77,7 @@ const props = defineProps<{
 }>()
 
 const node = computed(() => proxyMap.value[props.name])
+const downloadSpeedInfo = computed(() => getDownloadSpeedByName(node.value.name))
 const isLatencyTesting = ref(false)
 const typeFormatter = (type: string) => {
   type = type.toLowerCase()

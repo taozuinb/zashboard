@@ -16,6 +16,7 @@
         :is-latency-testing="isLatencyTesting"
         :display-content="false"
         @latency-test="handlerLatencyTest"
+        @speed-test="handlerSpeedTest"
       />
     </div>
     <PanelReveal
@@ -31,6 +32,7 @@
           :is-latency-testing="isLatencyTesting"
           :display-content="true"
           @latency-test="handlerLatencyTest"
+          @speed-test="handlerSpeedTest"
         />
       </template>
       <div
@@ -50,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { proxyGroupLatencyTest, proxyMap } from '@/assembly/proxies'
+import { proxyGroupLatencyTest, proxyMap, requestDownloadSpeedTest } from '@/assembly/proxies'
 import PanelReveal from '@/components/common/PanelReveal.vue'
 import { useBounceOnVisible } from '@/composables/use-bounce-on-visible'
 import { useRenderProxyList } from '@/composables/use-render-proxy-list'
@@ -105,6 +107,10 @@ const handlerLatencyTest = async () => {
   } catch {
     isLatencyTesting.value = false
   }
+}
+
+const handlerSpeedTest = async () => {
+  await requestDownloadSpeedTest(props.name)
 }
 
 onBeforeUnmount(() => {

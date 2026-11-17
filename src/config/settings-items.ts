@@ -357,6 +357,46 @@ export const SETTINGS_CATEGORIES: SettingsCategory[] = [
         section: 'latency',
       },
       {
+        key: `${SETTINGS_MENU_KEY.proxies}.downloadSpeedtestUrl`,
+        label: 'downloadSpeedtestUrl',
+        section: 'settingsSectionDownloadSpeedtest',
+      },
+      {
+        key: `${SETTINGS_MENU_KEY.proxies}.downloadSpeedtestTimeout`,
+        label: 'downloadSpeedtestTimeout',
+        section: 'settingsSectionDownloadSpeedtest',
+      },
+      {
+        key: `${SETTINGS_MENU_KEY.proxies}.downloadSpeedtestAutoSelect`,
+        label: 'downloadSpeedtestAutoSelect',
+        section: 'settingsSectionDownloadSpeedtest',
+      },
+      {
+        key: `${SETTINGS_MENU_KEY.proxies}.downloadSpeedtestSkipRouteCheck`,
+        label: 'downloadSpeedtestSkipRouteCheck',
+        section: 'settingsSectionDownloadSpeedtest',
+      },
+      {
+        key: `${SETTINGS_MENU_KEY.proxies}.downloadSpeedtestServerUrl`,
+        label: 'downloadSpeedtestServerUrl',
+        section: 'settingsSectionDownloadSpeedtest',
+      },
+      {
+        key: `${SETTINGS_MENU_KEY.proxies}.downloadSpeedtestServerProxy`,
+        label: 'downloadSpeedtestServerProxy',
+        section: 'settingsSectionDownloadSpeedtest',
+      },
+      {
+        key: `${SETTINGS_MENU_KEY.proxies}.downloadSpeedtestServerDuration`,
+        label: 'downloadSpeedtestServerDuration',
+        section: 'settingsSectionDownloadSpeedtest',
+      },
+      {
+        key: `${SETTINGS_MENU_KEY.proxies}.downloadSpeedtestServerMaxMB`,
+        label: 'downloadSpeedtestServerMaxMB',
+        section: 'settingsSectionDownloadSpeedtest',
+      },
+      {
         key: `${SETTINGS_MENU_KEY.proxies}.proxyFolderMode`,
         label: 'proxyFolderMode',
         section: 'settingsSectionProxyDisplay',

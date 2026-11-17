@@ -1,4 +1,5 @@
 export * from './actions'
+export * from './download-speed'
 export * from './latency'
 export * from './smart'
 export * from './state'

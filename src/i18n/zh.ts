@@ -97,6 +97,43 @@ const zh: LANG_MESSAGE = {
   speedtestModeCore: '核心控制',
   speedtestModeTip:
     '面板控制会让 Selector、LoadBalance、Smart 组沿用面板逐个测试节点的逻辑，并展示每个节点的测试进度。核心控制会调用核心的组测速接口，由核心一次性完成整组测速。',
+  downloadSpeedtest: '下载测速',
+  downloadSpeedtestTip:
+    '通过实际下载测速文件测出该分组内每个节点的下载速度，并选中最快的节点。测速依赖浏览器流量经过内核（例如把系统/浏览器代理指向内核的 mixed-port）；局域网直连访问面板时测不了节点速度。',
+  downloadSpeedtestUrl: '下载测速地址',
+  downloadSpeedtestTimeout: '下载测速超时',
+  downloadSpeedtestAutoSelect: '测速后自动选中最快节点',
+  downloadSpeedtestSkipRouteCheck: '跳过路由校验',
+  downloadSpeedtestSkipRouteCheckTip:
+    '默认会从内核连接列表确认测速流量确实经过被测节点，否则中止测速。只有在你确认面板流量已走代理、但校验总是失败时才需要打开。',
+  downloadSpeedtestRunningTip: '{name}\n正在下载测速：{node}（{done}/{total}）',
+  downloadSpeedtestFinishedTip: '{name}\n最快节点：{node} · {speed}',
+  downloadSpeedtestFailedTip: '{name}\n下载测速失败',
+  downloadSpeedtestCanceledTip: '{name}\n下载测速已取消',
+  downloadSpeedtestRouteUnverifiedTip:
+    '{name}\n无法确认测速流量经过该分组，下载测速已中止。如果面板是局域网直连访问，浏览器请求不会经过内核：请先把系统/浏览器代理指向内核的 mixed-port（内核需 allow-lan: true），并确认测速地址的规则走该分组。确定环境没问题时也可打开“跳过路由校验”。',
+  downloadSpeedtestResultTip: '{speed} · {time}',
+  downloadSpeedtestServerUrl: '测速服务地址',
+  downloadSpeedtestServerUrlTip:
+    '可选。填写后分组测速改由 node_speed_test 服务在服务端通过内核 mixed-port 真实下载测速，局域网直连访问面板时也能用。留空则使用浏览器内测速。支持完整地址或同源路径（如 /node-speed）。',
+  downloadSpeedtestServerProxy: '服务端 mixed 代理地址',
+  downloadSpeedtestServerProxyTip:
+    '测速服务所在机器看到的内核 HTTP/mixed 代理地址，例如 http://127.0.0.1:7890。',
+  downloadSpeedtestServerDuration: '单节点采样时长',
+  downloadSpeedtestServerMaxMB: '单节点字节上限',
+  downloadSpeedtestServerConfirmTitle: '开始服务端测速？',
+  downloadSpeedtestServerConfirmMessage:
+    '测速服务会临时切换分组“{group}”的节点，并通过内核真实下载以测量吞吐。请确认测速地址的规则会进入该分组。测速结束后会恢复原选择（除非开启了测速后自动选中）。',
+  downloadSpeedtestServerConfirmStart: '开始测速',
+  downloadSpeedtestServerModeTip: '已配置服务端测速，此按钮将调用测速服务执行。',
+  downloadSpeedtestServerForbiddenTip:
+    '测速服务拒绝了来自本面板的跨域请求。请用 --allowed-origin <本页面地址> 启动服务，例如 --allowed-origin http://192.168.1.10:8080。',
+  downloadSpeedtestServerUnavailableTip:
+    '无法连接测速服务：请检查服务地址、服务是否已启动，以及本页面是否在 --allowed-origin 白名单里。',
+  downloadSpeedtestServerBusyTip: '测速服务已有任务在运行，请先在服务页面停止或等待其完成。',
+  downloadSpeedtestServerGroupUnavailableTip: '测速服务无法测试该分组：{reason}',
+  downloadSpeedtestServerFailedTip: '{name}\n服务端测速失败：{message}',
+
   connectionStyle: '连接样式',
   logStyle: '日志样式',
   ruleStyle: '规则样式',
@@ -167,6 +204,8 @@ const zh: LANG_MESSAGE = {
   namedesc: '按名称降序',
   latencydesc: '按延迟降序',
   latencyasc: '按延迟升序',
+  speeddesc: '按速度降序',
+  speedasc: '按速度升序',
 
   language: '面板语言',
   automaticDisconnection: '切换节点时自动断开连接',
@@ -507,6 +546,7 @@ const zh: LANG_MESSAGE = {
   settingsSectionDiagnostics: '诊断工具',
   settingsSectionProxyDisplay: '分组与显示',
   settingsSectionProxyAdvanced: '图标与高级设置',
+  settingsSectionDownloadSpeedtest: '下载测速',
   settingsSectionConnectionDisplay: '展示方式',
   settingsSectionClientIdentity: '客户端识别与标注',
   ports: '端口',

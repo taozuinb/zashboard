@@ -26,6 +26,13 @@
       :group-name="proxyGroup.name"
       @click.stop="emit('latency-test')"
     />
+    <DownloadSpeedTag
+      v-if="isDownloadSpeedTestableGroup(name)"
+      :class="twMerge('bg-base-200/40 hover:bg-base-200/70')"
+      :name="proxyGroup.now"
+      :group-name="proxyGroup.name"
+      @click.stop="emit('speed-test')"
+    />
   </div>
   <div class="text-base-content/70 mt-2 flex items-center gap-2">
     <div class="flex flex-1 items-center gap-2 truncate text-sm">
@@ -46,12 +53,13 @@ import { isHiddenGroup } from '@/helper'
 import { checkTruncation } from '@/helper/tooltip'
 import { useTooltip } from '@/composables/use-tooltip'
 import { prettyBytesHelper } from '@/helper/utils'
-import { proxyMap } from '@/assembly/proxies'
+import { isDownloadSpeedTestableGroup, proxyMap } from '@/assembly/proxies'
 import { manageHiddenGroup, proxyGroupIconMargin, proxyGroupIconSize } from '@/store/settings'
 import { twMerge } from 'tailwind-merge'
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import VisibilityToggle from '../common/VisibilityToggle.vue'
+import DownloadSpeedTag from './DownloadSpeedTag.vue'
 import LatencyTag from './LatencyTag.vue'
 import ProxyGroupFilter from './ProxyGroupFilter.vue'
 import ProxyGroupNow from './ProxyGroupNow.vue'
@@ -65,6 +73,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'latency-test': []
+  'speed-test': []
 }>()
 
 const { t } = useI18n()

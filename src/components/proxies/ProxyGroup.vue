@@ -13,6 +13,7 @@
         :is-latency-testing="isLatencyTesting"
         :display-content="true"
         @latency-test="handlerLatencyTest"
+        @speed-test="handlerSpeedTest"
       />
       <ProxyGroupHeader
         v-else
@@ -20,6 +21,7 @@
         :proxies-count="proxiesCount"
         :is-latency-testing="isLatencyTesting"
         @latency-test="handlerLatencyTest"
+        @speed-test="handlerSpeedTest"
       />
     </template>
     <template v-slot:preview>
@@ -45,8 +47,12 @@
 import { useBounceOnVisible } from '@/composables/use-bounce-on-visible'
 import { useRenderProxyList } from '@/composables/use-render-proxy-list'
 import { isMiddleScreen } from '@/helper/utils'
-import { handlerProxySelect, proxyGroupLatencyTest } from '@/assembly/proxies'
-import { proxyMap } from '@/assembly/proxies'
+import {
+  handlerProxySelect,
+  proxyGroupLatencyTest,
+  proxyMap,
+  requestDownloadSpeedTest,
+} from '@/assembly/proxies'
 import { groupProxiesByProvider } from '@/store/settings'
 import { computed, ref } from 'vue'
 import CollapseCard from '../common/CollapseCard.vue'
@@ -74,6 +80,10 @@ const handlerLatencyTest = async () => {
   } catch {
     isLatencyTesting.value = false
   }
+}
+
+const handlerSpeedTest = async () => {
+  await requestDownloadSpeedTest(props.name)
 }
 
 useBounceOnVisible()

@@ -95,6 +95,46 @@ const en = {
   speedtestModeCore: 'Core controlled',
   speedtestModeTip:
     'Dashboard controlled keeps Selector, LoadBalance, and Smart groups on the dashboard-driven per-node test flow and shows per-node progress. Core controlled calls the core group latency API and lets the core test the whole group at once.',
+  downloadSpeedtest: 'Download speed test',
+  downloadSpeedtestTip:
+    'Tests the download speed of every node in this group by downloading a test file, then selects the fastest node. The browser traffic must go through the core (e.g. set the system/browser proxy to the core mixed-port); opening this dashboard directly over LAN cannot measure node speed.',
+  downloadSpeedtestUrl: 'Download test URL',
+  downloadSpeedtestTimeout: 'Download test timeout',
+  downloadSpeedtestAutoSelect: 'Select the fastest node after test',
+  downloadSpeedtestSkipRouteCheck: 'Skip route check',
+  downloadSpeedtestSkipRouteCheckTip:
+    'By default the test verifies from the core connections that the download really goes through the tested node, and aborts if not. Enable this only if the dashboard traffic is proxied but the check keeps failing.',
+  downloadSpeedtestRunningTip: '{name}\nDownload test: {node} ({done}/{total})',
+  downloadSpeedtestFinishedTip: '{name}\nFastest node: {node} · {speed}',
+  downloadSpeedtestFailedTip: '{name}\nDownload speed test failed',
+  downloadSpeedtestCanceledTip: '{name}\nDownload speed test canceled',
+  downloadSpeedtestRouteUnverifiedTip:
+    '{name}\nCannot confirm the test traffic goes through this proxy group, so the download test was canceled. If this dashboard is opened directly over LAN, the browser requests do not go through the core: point the browser/system proxy to the core mixed-port (allow-lan: true) first, and make sure the test URL is routed through this group. Or turn on "Skip route check" if you know the environment is fine.',
+  downloadSpeedtestResultTip: '{speed} · {time}',
+  downloadSpeedtestServerUrl: 'Speed test service URL',
+  downloadSpeedtestServerUrlTip:
+    'Optional. When set, group speed tests run on this node_speed_test service (it downloads through the core mixed-port on the server side), so they also work when this dashboard is opened directly over LAN. Leave empty to use the in-browser test. Supports an absolute URL or a same-origin path such as /node-speed.',
+  downloadSpeedtestServerProxy: 'Server-side mixed proxy',
+  downloadSpeedtestServerProxyTip:
+    'The core HTTP/mixed proxy address as seen from the speed test service, e.g. http://127.0.0.1:7890.',
+  downloadSpeedtestServerDuration: 'Sample duration per node',
+  downloadSpeedtestServerMaxMB: 'Byte limit per node',
+  downloadSpeedtestServerConfirmTitle: 'Start server-side speed test?',
+  downloadSpeedtestServerConfirmMessage:
+    'The speed test service will temporarily switch nodes in group "{group}" and download through the core to measure throughput. Make sure the test URL is routed into this group. The original selection is restored afterwards unless auto-select is enabled.',
+  downloadSpeedtestServerConfirmStart: 'Start test',
+  downloadSpeedtestServerModeTip:
+    'Server-side speed test is configured; this button runs it through the service.',
+  downloadSpeedtestServerForbiddenTip:
+    'The speed test service rejected this page as a cross-origin request. Start the service with --allowed-origin <this page origin>, e.g. --allowed-origin http://192.168.1.10:8080.',
+  downloadSpeedtestServerUnavailableTip:
+    'Cannot reach the speed test service. Check the service URL, that it is running, and that this page is allowed by --allowed-origin.',
+  downloadSpeedtestServerBusyTip:
+    'The speed test service already has a running task. Stop it on the service page or wait for it to finish.',
+  downloadSpeedtestServerGroupUnavailableTip:
+    'The speed test service cannot test this group: {reason}',
+  downloadSpeedtestServerFailedTip: '{name}\nServer-side speed test failed: {message}',
+
   connectionStyle: 'Connection style',
   logStyle: 'Log style',
   ruleStyle: 'Rule style',
@@ -165,6 +205,8 @@ const en = {
   namedesc: 'Name descending',
   latencydesc: 'Latency descending',
   latencyasc: 'Latency ascending',
+  speeddesc: 'Download speed descending',
+  speedasc: 'Download speed ascending',
 
   language: 'Language',
   automaticDisconnection: 'Auto disconnect on node switch',
@@ -520,6 +562,7 @@ const en = {
   settingsSectionDiagnostics: 'Diagnostics',
   settingsSectionProxyDisplay: 'Groups and display',
   settingsSectionProxyAdvanced: 'Icons and advanced settings',
+  settingsSectionDownloadSpeedtest: 'Download speed test',
   settingsSectionConnectionDisplay: 'Display',
   settingsSectionClientIdentity: 'Client identification and labels',
   ports: 'Ports',

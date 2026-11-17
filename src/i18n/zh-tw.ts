@@ -97,6 +97,43 @@ const zhTW: LANG_MESSAGE = {
   speedtestModeCore: '核心控制',
   speedtestModeTip:
     '面板控制會讓 Selector、LoadBalance、Smart 組沿用面板逐個測試節點的邏輯，並顯示每個節點的測試進度。核心控制會呼叫核心的組測速介面，由核心一次完成整組測速。',
+  downloadSpeedtest: '下載測速',
+  downloadSpeedtestTip:
+    '透過實際下載測速檔案測出該分組內每個節點的下載速度，並選中最快的節點。測速依賴瀏覽器流量經過核心（例如把系統/瀏覽器代理指向核心的 mixed-port）；區域網路直連存取面板時測不了節點速度。',
+  downloadSpeedtestUrl: '下載測速地址',
+  downloadSpeedtestTimeout: '下載測速逾時',
+  downloadSpeedtestAutoSelect: '測速後自動選中最快節點',
+  downloadSpeedtestSkipRouteCheck: '跳過路由校驗',
+  downloadSpeedtestSkipRouteCheckTip:
+    '預設會從核心連線列表確認測速流量確實經過被測節點，否則中止測速。只有在你確認面板流量已走代理、但校驗總是失敗時才需要開啟。',
+  downloadSpeedtestRunningTip: '{name}\n正在下載測速：{node}（{done}/{total}）',
+  downloadSpeedtestFinishedTip: '{name}\n最快節點：{node} · {speed}',
+  downloadSpeedtestFailedTip: '{name}\n下載測速失敗',
+  downloadSpeedtestCanceledTip: '{name}\n下載測速已取消',
+  downloadSpeedtestRouteUnverifiedTip:
+    '{name}\n無法確認測速流量經過該分組，下載測速已中止。如果面板是區域網路直連存取，瀏覽器請求不會經過核心：請先把系統/瀏覽器代理指向核心的 mixed-port（核心需 allow-lan: true），並確認測速地址的規則走該分組。確定環境沒問題時也可開啟「跳過路由校驗」。',
+  downloadSpeedtestResultTip: '{speed} · {time}',
+  downloadSpeedtestServerUrl: '測速服務地址',
+  downloadSpeedtestServerUrlTip:
+    '選填。填寫後分組測速改由 node_speed_test 服務在伺服器端透過核心 mixed-port 真實下載測速，區域網路直連存取面板時也能用。留空則使用瀏覽器內測速。支援完整地址或同源路徑（如 /node-speed）。',
+  downloadSpeedtestServerProxy: '伺服器端 mixed 代理地址',
+  downloadSpeedtestServerProxyTip:
+    '測速服務所在電腦看到的內核 HTTP/mixed 代理地址，例如 http://127.0.0.1:7890。',
+  downloadSpeedtestServerDuration: '單節點取樣時長',
+  downloadSpeedtestServerMaxMB: '單節點位元組上限',
+  downloadSpeedtestServerConfirmTitle: '開始伺服器端測速？',
+  downloadSpeedtestServerConfirmMessage:
+    '測速服務會暫時切換分組「{group}」的節點，並透過核心真實下載以測量吞吐量。請確認測速地址的規則會進入該分組。測速結束後會恢復原選擇（除非開啟了測速後自動選中）。',
+  downloadSpeedtestServerConfirmStart: '開始測速',
+  downloadSpeedtestServerModeTip: '已設定伺服器端測速，此按鈕將呼叫測速服務執行。',
+  downloadSpeedtestServerForbiddenTip:
+    '測速服務拒絕了來自本面板的跨域請求。請用 --allowed-origin <本頁面地址> 啟動服務，例如 --allowed-origin http://192.168.1.10:8080。',
+  downloadSpeedtestServerUnavailableTip:
+    '無法連線測速服務：請檢查服務地址、服務是否已啟動，以及本頁面是否在 --allowed-origin 白名單裡。',
+  downloadSpeedtestServerBusyTip: '測速服務已有任務在執行，請先在服務頁面停止或等待其完成。',
+  downloadSpeedtestServerGroupUnavailableTip: '測速服務無法測試該分組：{reason}',
+  downloadSpeedtestServerFailedTip: '{name}\n伺服器端測速失敗：{message}',
+
   connectionStyle: '連接樣式',
   logStyle: '日誌樣式',
   ruleStyle: '規則樣式',
@@ -167,6 +204,8 @@ const zhTW: LANG_MESSAGE = {
   namedesc: '按名稱降序',
   latencydesc: '按延遲降序',
   latencyasc: '按延遲升序',
+  speeddesc: '按速度降序',
+  speedasc: '按速度升序',
 
   language: '面板語言',
   automaticDisconnection: '切換節點時自動斷開連接',
@@ -507,6 +546,7 @@ const zhTW: LANG_MESSAGE = {
   settingsSectionDiagnostics: '診斷工具',
   settingsSectionProxyDisplay: '群組與顯示',
   settingsSectionProxyAdvanced: '圖示與進階設定',
+  settingsSectionDownloadSpeedtest: '下載測速',
   settingsSectionConnectionDisplay: '顯示方式',
   settingsSectionClientIdentity: '用戶端識別與標註',
   ports: '端口',
