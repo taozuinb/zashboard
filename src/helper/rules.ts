@@ -12,8 +12,11 @@ export const isRuleDisabled = (rule: Rule) => {
   return rule.disabled
 }
 
+// 内核 /rules 给的是 RuleSet，草稿统一成配置写法 RULE-SET
+const isRuleSet = (type: string) => type === 'RuleSet' || type === 'RULE-SET'
+
 export const getRuleSize = (rule: Rule) => {
-  if (rule.type === 'RuleSet') {
+  if (isRuleSet(rule.type)) {
     return ruleProviderList.value.find((provider) => provider.name === rule.payload)?.ruleCount
   }
 
@@ -21,7 +24,7 @@ export const getRuleSize = (rule: Rule) => {
 }
 
 export const isUpdateableRuleSet = (rule: Rule) => {
-  if (rule.type !== 'RuleSet') {
+  if (!isRuleSet(rule.type)) {
     return false
   }
 

@@ -66,23 +66,27 @@ import {
   toggleRuleDisabledWithSideEffects,
 } from '@/helper/rules'
 import { RULE_TAB_TYPE } from '@/constant'
+import { useRuleEditor } from '@/composables/use-rule-editor'
+import type { DraftedRule } from '@/helper/rule-draft'
 import { notifyRequestError } from '@/helper/request-error'
 import { fromNow, PROXIES_PARENT_CLASS } from '@/helper/utils'
+import { ruleEditMode } from '@/store/rule-drafts'
 import { displayLatencyInRule, displayNowNodeInRule } from '@/store/settings'
 import type { Rule, RuleProvider } from '@/types'
-import { ArrowPathIcon } from '@heroicons/vue/24/outline'
+import { ArrowPathIcon, PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import type { ColumnDef } from '@tanstack/vue-table'
 import dayjs from 'dayjs'
-import { computed, h, ref } from 'vue'
+import { computed, h, ref, type Component } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 const { showRuleHitTip } = useRuleHitTooltip()
+const editor = useRuleEditor()
 
 const ruleIndexMap = computed(() => {
-  const map = new Map<Rule, number>()
+  const map = new Map<DraftedRule, number>()
 
-  rules.value.forEach((rule, index) => map.set(rule, index + 1))
+  renderRules.value.forEach((rule, index) => map.set(rule, index + 1))
 
   return map
 })
@@ -163,7 +167,23 @@ const updateButton = (name: string, onClick: () => void) =>
     [h(ArrowPathIcon, { class: 'h-3.5 w-3.5 opacity-60' })],
   )
 
-const ruleColumns: ColumnDef<Rule>[] = [
+const draftButton = (icon: Component, action: string, label: string, onClick: () => void) =>
+  h(
+    'button',
+    {
+      class: 'btn btn-circle btn-ghost btn-xs',
+      'data-rule-action': action,
+      'aria-label': label,
+      title: label,
+      onClick: (e: MouseEvent) => {
+        e.stopPropagation()
+        onClick()
+      },
+    },
+    [h(icon, { class: 'h-3.5 w-3.5 opacity-60' })],
+  )
+
+const ruleColumns: ColumnDef<DraftedRule>[] = [
   {
     header: '#',
     id: 'index',
@@ -180,7 +200,17 @@ const ruleColumns: ColumnDef<Rule>[] = [
     header: () => t('type'),
     id: 'type',
     accessorFn: (rule) => rule.type,
-    cell: ({ row }) => h(HighlightText, { text: row.original.type, filter: rulesFilter.value }),
+    cell: ({ row }) =>
+      h('span', { class: 'inline-flex items-center gap-1.5' }, [
+        h(HighlightText, { text: row.original.type, filter: rulesFilter.value }),
+        row.original.draftState
+          ? h(
+              'span',
+              { class: 'badge badge-xs badge-warning font-normal' },
+              t(row.original.draftState === 'add' ? 'ruleDraftAdded' : 'ruleDraftModified'),
+            )
+          : null,
+      ]),
     meta: { cellClass: 'w-40' },
   },
   {
@@ -280,10 +310,18 @@ const ruleColumns: ColumnDef<Rule>[] = [
     header: () => t('actions'),
     id: 'actions',
     enableSorting: false,
-    cell: ({ row }) =>
-      isUpdateableRuleSet(row.original)
+    cell: ({ row }) => {
+      if (ruleEditMode.value && editor) {
+        return h('div', { class: 'flex items-center gap-0.5' }, [
+          draftButton(PencilSquareIcon, 'edit', t('editRule'), () => editor.edit(row.original)),
+          draftButton(TrashIcon, 'remove', t('ruleDraftRemove'), () => editor.remove(row.original)),
+        ])
+      }
+
+      return isUpdateableRuleSet(row.original)
         ? updateButton(row.original.payload, () => updateProviderHandler(row.original.payload))
-        : null,
+        : null
+    },
     meta: { cellClass: 'w-20' },
   },
 ]

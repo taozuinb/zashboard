@@ -7,6 +7,7 @@
       v-model="inputValue"
       ref="inputRef"
       type="text"
+      :disabled="disabled"
       :class="inputClass"
       :placeholder="placeholder || ''"
       :name="name || ''"
@@ -98,6 +99,7 @@ const props = defineProps<{
   name?: string
   autocomplete?: string
   clearable?: boolean
+  disabled?: boolean
   inputClass?: string
   menus?: string[]
   menusDeleteable?: boolean

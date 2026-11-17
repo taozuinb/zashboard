@@ -1,5 +1,9 @@
 <template>
-  <div :class="{ 'opacity-50': isDisabled }">
+  <div
+    data-rule-row
+    :data-rule-state="rule.draftState ?? 'core'"
+    :class="{ 'opacity-50': isDisabled }"
+  >
     <div
       class="transparent-collapse collapse rounded-none!"
       :class="isExpanded ? 'collapse-open' : 'collapse-close'"
@@ -30,6 +34,12 @@
               :text="rule.payload"
               :filter="rulesFilter"
             />
+          </span>
+          <span
+            v-if="rule.draftState"
+            class="badge badge-xs badge-warning ml-1 font-normal"
+          >
+            {{ $t(rule.draftState === 'add' ? 'ruleDraftAdded' : 'ruleDraftModified') }}
           </span>
           <span
             v-if="typeof size === 'number' && size !== -1"
@@ -80,6 +90,29 @@
             :interactive="!isCollapsed"
             @update:selected="selected = $event"
           />
+          <div
+            v-if="ruleEditMode && editor"
+            class="ml-auto flex shrink-0 items-center gap-0.5"
+          >
+            <button
+              class="btn btn-circle btn-ghost btn-xs"
+              data-rule-action="edit"
+              :aria-label="$t('editRule')"
+              :title="$t('editRule')"
+              @click.stop="editor.edit(rule)"
+            >
+              <PencilSquareIcon class="h-3.5 w-3.5 opacity-60" />
+            </button>
+            <button
+              class="btn btn-circle btn-ghost btn-xs"
+              data-rule-action="remove"
+              :aria-label="$t('ruleDraftRemove')"
+              :title="$t('ruleDraftRemove')"
+              @click.stop="editor.remove(rule)"
+            >
+              <TrashIcon class="h-3.5 w-3.5 opacity-60" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -114,12 +147,16 @@ import { notifyRequestError } from '@/helper/request-error'
 import { useTooltip } from '@/composables/use-tooltip'
 import { proxyGroupList } from '@/assembly/proxies'
 import { fetchRules, updateRuleProvider } from '@/assembly/rules'
+import type { DraftedRule } from '@/helper/rule-draft'
+import { useRuleEditor } from '@/composables/use-rule-editor'
+import { ruleEditMode } from '@/store/rule-drafts'
 import { displayLatencyInRule, displayNowNodeInRule } from '@/store/settings'
-import type { Rule } from '@/types'
 import {
   ArrowPathIcon,
   InformationCircleIcon,
+  PencilSquareIcon,
   QuestionMarkCircleIcon,
+  TrashIcon,
 } from '@heroicons/vue/24/outline'
 import { twMerge } from 'tailwind-merge'
 import type { Ref } from 'vue'
@@ -130,9 +167,11 @@ import ProxyChainPath from '../common/ProxyChainPath.vue'
 import ProxyGroup from '../proxies/ProxyGroup.vue'
 
 const props = defineProps<{
-  rule: Rule
+  rule: DraftedRule
   index: number
 }>()
+
+const editor = useRuleEditor()
 
 const expandedRule = inject<Ref<string | null>>('expandedRule', ref(null))
 const ruleKey = computed(() => `${props.index}-${props.rule.payload}`)

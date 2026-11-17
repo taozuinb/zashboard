@@ -213,7 +213,15 @@ export const createMockServer = async ({
     }
     if (pathname === '/providers/proxies') return json(res, { providers })
     if (pathname === '/providers/rules') return json(res, { providers: {} })
-    if (pathname === '/rules') return json(res, { rules: [] })
+    if (pathname === '/rules')
+      return json(res, {
+        rules: [
+          // 跟真 mihomo 一样,类型是 DomainSuffix / GeoIP / Match 这种写法
+          { index: 0, type: 'DomainSuffix', payload: 'example.com', proxy: 'Group-000', size: -1 },
+          { index: 1, type: 'GeoIP', payload: 'CN', proxy: 'DIRECT', size: -1 },
+          { index: 2, type: 'Match', payload: '', proxy: 'Group-001', size: -1 },
+        ],
+      })
 
     // 单节点测速会更新内核里的 history,随后页面重新 GET /proxies 才能看到排序变化。
     // mock 也保留这个语义,否则只能测到请求成功,覆盖不到「测速后重排」这条真实链路。

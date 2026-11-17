@@ -3,6 +3,7 @@ import { fetchRules, ruleProviderList, rules, updateRuleProvider } from '@/assem
 import { useCtrlsBar } from '@/composables/use-ctrls-bar'
 import { LIST_DISPLAY_STYLE, RULE_TAB_TYPE } from '@/constant'
 import { showNotification } from '@/helper/notification'
+import { ruleEditMode } from '@/store/rule-drafts'
 import { rulesFilter, rulesTabShow } from '@/store/rules'
 import {
   disconnectOnRuleDisable,
@@ -10,7 +11,7 @@ import {
   displayNowNodeInRule,
   ruleDisplayStyle,
 } from '@/store/settings'
-import { ArrowPathIcon, WrenchScrewdriverIcon } from '@heroicons/vue/24/outline'
+import { ArrowPathIcon, PencilSquareIcon, WrenchScrewdriverIcon } from '@heroicons/vue/24/outline'
 import { computed, defineComponent, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import CtrlsBar from '../common/CtrlsBar.vue'
@@ -106,6 +107,19 @@ export default defineComponent({
         />
       )
 
+      const editToggle = rulesTabShow.value === RULE_TAB_TYPE.RULES && (
+        <button
+          class={['btn btn-circle btn-sm', ruleEditMode.value && 'btn-primary']}
+          data-rule-edit="toggle"
+          title={t('ruleEditMode')}
+          aria-label={t('ruleEditMode')}
+          aria-pressed={ruleEditMode.value}
+          onClick={() => (ruleEditMode.value = !ruleEditMode.value)}
+        >
+          <PencilSquareIcon class="h-4 w-4" />
+        </button>
+      )
+
       const settingsModal = (
         <>
           <button
@@ -174,6 +188,7 @@ export default defineComponent({
           )}
           <div class="flex w-full items-center gap-2">
             {searchInput}
+            {editToggle}
             {settingsModal}
           </div>
         </div>
@@ -183,6 +198,7 @@ export default defineComponent({
           {searchInput}
           <div class="flex-1"></div>
           {upgradeAllIcon}
+          {editToggle}
           {settingsModal}
         </div>
       )
