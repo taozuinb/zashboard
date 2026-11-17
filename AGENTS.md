@@ -205,6 +205,43 @@ Tailwind 4（CSS-first，`@theme inline`）+ daisyUI 5。主题靠 `document.doc
 - 新增字体变体的联动点：`src/assets/load-fonts.ts`、`vite.config.ts` 的 `FONT` 注释、`package.json`
   脚本、workflow 的 matrix、README 的下载表。
 
+### 8.1 远端与推送
+
+本仓库有两个远端，职责不同，**开发分支不要往 `origin` 推**：
+
+| remote | 地址 | 用途 |
+| --- | --- | --- |
+| `origin` | `https://giteaweb.nuc.taozui.online/taozui/zashboard.git` | 上游镜像（pull mirror），**只读** |
+| `fork` | `git@github.com:taozuinb/zashboard.git` | 自己的 GitHub fork，开发分支推这里 |
+
+`origin` 是 Gitea 的 mirror 仓库，同步方向只有「拉」，服务端在 pre-receive 阶段直接拒绝写入：
+
+```
+remote: mirror repository is read-only
+fatal: unable to access '.../taozui/zashboard.git/': The requested URL returned error: 403
+```
+
+这**不是凭据问题**——认证过了才会走到 mirror 检查。要往 Gitea 推只能另建普通仓库，或把仓库的
+mirror 开关关掉（会停止从上游自动同步，一般不这么做）。
+
+推送开发分支：
+
+```bash
+git push -u fork main_tz   # 首次推送并建立跟踪
+git push                   # 之后在 main_tz 上直接推
+```
+
+推完 GitHub 会回一个 PR 入口：`https://github.com/taozuinb/zashboard/pull/new/<branch>`。
+已经推上去的提交用新提交修，不要对 `main_tz` 做 force push（分支可能已经有人在看）。
+
+认证：`fork` 走 SSH，用 `~/.ssh/id_ed25519`（公钥已加到 GitHub 账号）；HTTPS 推 GitHub 在本机没有
+可用凭据。受限环境里如果 `~/.ssh/known_hosts` 不可写导致 SSH 起不来，给 git 指一个可写的
+known_hosts 即可：
+
+```bash
+export GIT_SSH_COMMAND="ssh -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=$PWD/.git/known_hosts"
+```
+
 ## 9. 提交前自检
 
 1. `pnpm type-check`（pre-commit 也会跑）；
